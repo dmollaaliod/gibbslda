@@ -39,7 +39,7 @@ def initialise(data):
         d_topic_distr = []
         doc_sample = []
         for w in d:
-	    distr = {0:0.5,1:0.5}
+            distr = {0:0.5,1:0.5}
             d_topic_distr.append([w,distr])
             doc_sample.append([w,sample(distr)])
         topic_distr.append(d_topic_distr)
@@ -56,7 +56,7 @@ def gibbs_iterate(this_sample,alpha=50/2,beta=0.01):
     d_i = -1
     topic_distr = []
     for d in this_sample:
-	d_topic_distr = []
+        d_topic_distr = []
         d_i += 1
         for w in d:
             CDT = compute_CDT(this_sample)
@@ -73,7 +73,7 @@ def gibbs_iterate(this_sample,alpha=50/2,beta=0.01):
             p_z[1] = p_z[1]/Z
 
 	    # Sample from the posterior
-	    w[1] = sample(p_z)
+            w[1] = sample(p_z)
 
             d_topic_distr.append([w[0],p_z])
 
@@ -243,26 +243,26 @@ def print_topic_distr(topic_distr):
     "Print the topic distribution"
     words = set([w[0] for d in topic_distr for w in d])
     widths = dict()
-    print "   ",
+    print("   ",end="")
     for w in words:
         # Compute the max number of instances of the word in a document
         widths[w] = max([len([w1 for w1 in d if w1[0]==w]) for d in topic_distr])
-        print "%-*s " % (widths[w]*4,w),
-    print
+        print("%-*s " % (widths[w]*4,w),end="")
+    print()
         
     for d in topic_distr:
-##        print "%3i" % len([t for (w,t) in d if t[0]>=0.5]),
-##        print "%3i" % len([t for (w,t) in d if t[1]>=0.5]),
-        print "   ",
+##        print("%3i" % len([t for (w,t) in d if t[0]>=0.5]),end="")
+##        print("%3i" % len([t for (w,t) in d if t[1]>=0.5]),end="")
+        print("   ",end="")
         for w in words:
             topics = [t for (wi,t) in d if wi==w]
             for t in topics:
-                print "%1.1f" % (t[1]),
+                print("%1.1f " % (t[1]),end="")
             for i in range(0,widths[w]-len(topics)):
-                print "   ",
-            print " ",
-        print
-    print
+                print("    ",end="")
+            print(" ",end="")
+        print()
+    print()
 
 def sample(probDict):
     """samples n items from the distribution probDict"""
@@ -299,9 +299,9 @@ if __name__ == '__main__':
             (0.5,0.5),(0.5,0.5),(0.5,0.5),(0.5,0.5),(0.5,0.5),
             (0,1),(0,1),(0,1),(0,1))       # topic distr per document
     data = generate_docs(words,phi,docs)
-    print "Generated %i documents" % (len(data))
+    print("Generated %i documents" % (len(data)))
     topic_distr,this_sample = initialise(data)
-    print "Initial distribution:"
+    print("Initial distribution:")
     print_topic_distr(topic_distr)
     all_rmse = []
     prev_topic_distr = topic_distr
@@ -311,10 +311,10 @@ if __name__ == '__main__':
         all_rmse.append(rmse(topic_distr,prev_topic_distr))
         prev_topic_distr = topic_distr
         if i % modulo == 0:
-            print "After iteration %i:" % (i+1)
+            print("After iteration %i:" % (i+1))
             print_topic_distr(topic_distr)
     
-    print "Final distribution:"
+    print("Final distribution:")
     print_topic_distr(topic_distr)
 
     pyplot.plot(all_rmse,label="$\sqrt{\sum_{d,w,t}(topic(d,w,t)_i - topic(d,w,t)_{i-1})^2/n}$")
