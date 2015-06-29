@@ -282,6 +282,33 @@ if __name__ == '__main__':
     doctest.testmod()
 
     try:
+        arg1 = sys.argv[1]
+    except IndexError:
+        arg1 = "notest"
+
+    if arg1 == "test":
+        print("Handworked example")
+        data = [["word0","word0","word0","word0"],
+                ["word1","word1","word1","word1"]]
+        topic_distr,this_sample = initialise(data)
+        print("Initial distribution:")
+        print_topic_distr(topic_distr)
+        all_rmse = []
+        prev_topic_distr = topic_distr
+        for i in range(10):
+            topic_distr,this_sample = gibbs_iterate(this_sample,1)
+            all_rmse.append(rmse(topic_distr,prev_topic_distr))
+            # if i % 1 == 0:
+            #     print("After iteration %i:" % (i+1))
+            #     print_topic_distr(topic_distr)
+        print("Final distribution:")
+        print_topic_distr(topic_distr)
+        pyplot.plot(all_rmse,label="$\sqrt{\sum_{d,w,t}(topic(d,w,t)_i - topic(d,w,t)_{i-1})^2/n}$")
+        pyplot.legend()
+        pyplot.show()
+        sys.exit()
+        
+    try:
         iterations = int(sys.argv[1])
     except IndexError:
         iterations = 5    
